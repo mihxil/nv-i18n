@@ -31,7 +31,9 @@ import java.util.regex.Pattern;
  * <p>
  * Enum names of this enum themselves are represented by
  * <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>
- * code (2-letter upper-case alphabets). There are instance methods to get the
+ * code (2-letter upper-case alphabets), unless there is none available, for countries which don't any more exist.
+ *
+ * There are instance methods to get the
  * country name ({@link #getName()}), the
  * <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3" >ISO 3166-1 alpha-3</a>
  * code ({@link #getAlpha3()}) and the
@@ -2056,6 +2058,102 @@ public enum CountryCode
      * Officially assigned]
      */
     ZW("Zimbabwe", "ZWE", 716, Assignment.OFFICIALLY_ASSIGNED),
+
+
+    /**
+     * Formally used countries view-source:http://en.wikipedia.org/wiki/ISO_3166-3
+     */
+    /**
+     *<a href="https://www.iso.org/obp/ui/#iso:code:3166:BQAQ">BQAQ</a>,80
+     **/
+
+    BQAQ("British Antarctic Territory","BQAQ",80,Assignment.FORMALLY_USED),
+
+
+    /**
+     * <a href="https://www.iso.org/obp/ui/#iso:code:3166:CTKI">CTKI</a>, 128
+     */
+    CTKI("Canton and Enderbury Islands","CTKI",128,Assignment.FORMALLY_USED),
+
+
+    /**
+     * <a href="https://www.iso.org/obp/ui/#iso:code:3166:CSHH">CSHH</a>, 200
+     */
+    CSHH("Czechoslovakia","CSHH",200,Assignment.FORMALLY_USED),
+
+
+    /**
+     * <a href="https://www.iso.org/obp/ui/#iso:code:3166:NQAQ">NQAQ</a>, 216
+     */
+    NQAQ("Queen Maud Land","NQAQ",216,Assignment.FORMALLY_USED),
+
+
+    /**
+     * <a href="https://www.iso.org/obp/ui/#iso:code:3166:FXFR">FXFR</a>, 249
+     */
+    FXFR("Metropolitan France","FXFR",249,Assignment.FORMALLY_USED),
+
+
+    /**
+     * <a href="https://www.iso.org/obp/ui/#iso:code:3166:DDDE">DDDE</a>, 278
+     */
+    DDDE("East Germany","DDDE",278,Assignment.FORMALLY_USED),
+
+
+    /**
+     * <a href="https://www.iso.org/obp/ui/#iso:code:3166:JTUM">JTUM</a>, 396
+     */
+    JTUM("Johnston Atoll","JTUM",396,Assignment.FORMALLY_USED),
+
+
+    /**
+     * <a href="https://www.iso.org/obp/ui/#iso:code:3166:MIUM">MIUM</a>, 488
+     */
+    MIUM("Midway Atoll","MIUM",488,Assignment.FORMALLY_USED),
+
+
+    /**
+     * <a href="https://www.iso.org/obp/ui/#iso:code:3166:PCHH">PCHH</a>, 582
+     */
+    PCHH("Trust Territory of the Pacific Islands","PCHH",582,Assignment.FORMALLY_USED),
+
+
+    /**
+     * <a href="https://www.iso.org/obp/ui/#iso:code:3166:PZPA">PZPA</a>, 594
+     */
+    PZPA("Panama Canal Zone","PZPA",594,Assignment.FORMALLY_USED),
+
+
+    /**
+     * <a href="https://www.iso.org/obp/ui/#iso:code:3166:SKIN">SKIN</a>, 698
+     */
+    SKIN("Sikkim","SKIN",698,Assignment.FORMALLY_USED),
+
+
+    /**
+     * <a href="https://www.iso.org/obp/ui/#iso:code:3166:PUUM">PUUM</a>, 849
+     */
+    PUUM("","PUUM",849,Assignment.FORMALLY_USED),
+
+
+    /**
+     * <a href="https://www.iso.org/obp/ui/#iso:code:3166:SUHH">SUHH</a>, 810
+     */
+    SUHH("","SUHH",810,Assignment.FORMALLY_USED),
+
+
+    /**
+     * <a href="https://www.iso.org/obp/ui/#iso:code:3166:WKUM">WKUM</a>, 872
+     */
+    WKUM("Wake Island","WKUM",872,Assignment.FORMALLY_USED),
+
+
+    /**
+     * <a href="https://www.iso.org/obp/ui/#iso:code:3166:YDYE">YDYE</a>, 720
+     */
+    YDYE("South Yemen","YDYE",720,Assignment.FORMALLY_USED),
+
+
     ;
 
 
@@ -2115,7 +2213,11 @@ public enum CountryCode
          * Not used in ISO 3166-1 in deference to international property
          * organization names.
          */
-        NOT_USED
+        NOT_USED,
+
+        FORMALLY_USED
+
+
     }
 
 
