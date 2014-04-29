@@ -9,6 +9,7 @@ def table = html.'**'.find{it.name() == 'table'}
 table.tr.each {
     if (it.td.size() > 0) {
         def name = it.td[0].a.@title.text()
+        if (! name ) name = it.td[0].span.a.@title.text()
         int numb = 0
         it.td[1].tt.each {
             def other = it.text()

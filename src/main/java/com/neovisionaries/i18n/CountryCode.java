@@ -2064,96 +2064,93 @@ public enum CountryCode
      * Formally used countries view-source:http://en.wikipedia.org/wiki/ISO_3166-3
      */
     /**
-     *<a href="https://www.iso.org/obp/ui/#iso:code:3166:BQAQ">BQAQ</a>,80
-     **/
-
-    BQAQ("British Antarctic Territory","BQAQ",80,Assignment.FORMALLY_USED),
+     * <a href="https://www.iso.org/obp/ui/#iso:code:3166:BQAQ">BQAQ</a>, 80
+     */
+    BQAQ("British Antarctic Territory", "BQAQ", 80, Assignment.FORMALLY_USED),
 
 
     /**
      * <a href="https://www.iso.org/obp/ui/#iso:code:3166:CTKI">CTKI</a>, 128
      */
-    CTKI("Canton and Enderbury Islands","CTKI",128,Assignment.FORMALLY_USED),
+    CTKI("Canton and Enderbury Islands", "CTKI", 128, Assignment.FORMALLY_USED),
 
 
     /**
      * <a href="https://www.iso.org/obp/ui/#iso:code:3166:CSHH">CSHH</a>, 200
      */
-    CSHH("Czechoslovakia","CSHH",200,Assignment.FORMALLY_USED),
+    CSHH("Czechoslovakia", "CSHH", 200, Assignment.FORMALLY_USED),
 
 
     /**
      * <a href="https://www.iso.org/obp/ui/#iso:code:3166:NQAQ">NQAQ</a>, 216
      */
-    NQAQ("Queen Maud Land","NQAQ",216,Assignment.FORMALLY_USED),
+    NQAQ("Queen Maud Land", "NQAQ", 216, Assignment.FORMALLY_USED),
 
 
     /**
      * <a href="https://www.iso.org/obp/ui/#iso:code:3166:FXFR">FXFR</a>, 249
      */
-    FXFR("Metropolitan France","FXFR",249,Assignment.FORMALLY_USED),
+    FXFR("Metropolitan France", "FXFR", 249, Assignment.FORMALLY_USED),
 
 
     /**
      * <a href="https://www.iso.org/obp/ui/#iso:code:3166:DDDE">DDDE</a>, 278
      */
-    DDDE("East Germany","DDDE",278,Assignment.FORMALLY_USED),
+    DDDE("East Germany", "DDDE", 278, Assignment.FORMALLY_USED),
 
 
     /**
      * <a href="https://www.iso.org/obp/ui/#iso:code:3166:JTUM">JTUM</a>, 396
      */
-    JTUM("Johnston Atoll","JTUM",396,Assignment.FORMALLY_USED),
+    JTUM("Johnston Atoll", "JTUM", 396, Assignment.FORMALLY_USED),
 
 
     /**
      * <a href="https://www.iso.org/obp/ui/#iso:code:3166:MIUM">MIUM</a>, 488
      */
-    MIUM("Midway Atoll","MIUM",488,Assignment.FORMALLY_USED),
+    MIUM("Midway Atoll", "MIUM", 488, Assignment.FORMALLY_USED),
 
 
     /**
      * <a href="https://www.iso.org/obp/ui/#iso:code:3166:PCHH">PCHH</a>, 582
      */
-    PCHH("Trust Territory of the Pacific Islands","PCHH",582,Assignment.FORMALLY_USED),
+    PCHH("Trust Territory of the Pacific Islands", "PCHH", 582, Assignment.FORMALLY_USED),
 
 
     /**
      * <a href="https://www.iso.org/obp/ui/#iso:code:3166:PZPA">PZPA</a>, 594
      */
-    PZPA("Panama Canal Zone","PZPA",594,Assignment.FORMALLY_USED),
+    PZPA("Panama Canal Zone", "PZPA", 594, Assignment.FORMALLY_USED),
 
 
     /**
      * <a href="https://www.iso.org/obp/ui/#iso:code:3166:SKIN">SKIN</a>, 698
      */
-    SKIN("Sikkim","SKIN",698,Assignment.FORMALLY_USED),
+    SKIN("Sikkim", "SKIN", 698, Assignment.FORMALLY_USED),
 
 
     /**
      * <a href="https://www.iso.org/obp/ui/#iso:code:3166:PUUM">PUUM</a>, 849
      */
-    PUUM("","PUUM",849,Assignment.FORMALLY_USED),
+    PUUM("United States Miscellaneous Pacific Islands", "PUUM", 849, Assignment.FORMALLY_USED),
 
 
     /**
      * <a href="https://www.iso.org/obp/ui/#iso:code:3166:SUHH">SUHH</a>, 810
      */
-    SUHH("","SUHH",810,Assignment.FORMALLY_USED),
+    SUHH("Soviet Union", "SUHH", 810, Assignment.FORMALLY_USED),
 
 
     /**
      * <a href="https://www.iso.org/obp/ui/#iso:code:3166:WKUM">WKUM</a>, 872
      */
-    WKUM("Wake Island","WKUM",872,Assignment.FORMALLY_USED),
+    WKUM("Wake Island", "WKUM", 872, Assignment.FORMALLY_USED),
 
 
     /**
      * <a href="https://www.iso.org/obp/ui/#iso:code:3166:YDYE">YDYE</a>, 720
      */
-    YDYE("South Yemen","YDYE",720,Assignment.FORMALLY_USED),
-
-
+    YDYE("South Yemen", "YDYE", 720, Assignment.FORMALLY_USED),
     ;
 
 
