@@ -2602,6 +2602,10 @@ public enum CountryCode implements Region
         }
     }
 
+    public Type getType() {
+        return Type.COUNTRY;
+
+    }
 
     /**
      * Get a {@code CountryCode} that corresponds to the given ISO 3166-1

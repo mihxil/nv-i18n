@@ -1,6 +1,5 @@
 package com.neovisionaries.i18n;
 
-import java.util.Currency;
 import java.util.Locale;
 
 /**
@@ -16,7 +15,37 @@ public interface Region
 
 	Locale toLocale();
 
-	Currency getCurrency();
+	Type getType();
+
+
+	enum Type {
+		COUNTRY,
+		PROVINCE,
+		STATE,
+		PARISH,
+		EMIRATE,
+		DEPENDENCY,
+		CITY,
+		REGION,
+		TERRITORY,
+		MUNICIPALITY,
+		SPECIAL_MUNICIPALITY,
+		RAYON,
+		ENTITY,
+		DIVISION,
+		DISTRICT,
+		GOVERNORATE,
+		DEPARTMENT,
+		FEDERAL_DISTRICT,
+		TOWN,
+		OBLAST,
+		COMMUNUNE,
+		PREFECTURE,
+		CANTON,
+		LAND,
+		ISLAND
+	}
+
 
 
 }
