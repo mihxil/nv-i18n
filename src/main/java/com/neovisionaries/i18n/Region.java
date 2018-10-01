@@ -4,8 +4,10 @@ import java.util.Currency;
 import java.util.Locale;
 
 /**
+ * The region interface is implemented by {@link CountryCode}, but other implementations could exist also.
+ *
  * @author Michiel Meeuwissen
- * @since ...
+ * @since 1.24
  */
 public interface Region
 {
