@@ -107,7 +107,7 @@ import java.util.regex.Pattern;
  *
  * @author Takahiko Kawasaki
  */
-public enum CountryCode
+public enum CountryCode implements Region
 {
 
     /**
