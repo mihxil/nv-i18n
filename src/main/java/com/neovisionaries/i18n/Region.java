@@ -10,16 +10,23 @@ import java.util.Locale;
  */
 public interface Region
 {
-
 	String getName();
 
 	Locale toLocale();
 
 	Type getType();
 
-
 	enum Type {
+		/**
+		 * A country or formal country
+		 */
 		COUNTRY,
+
+		/**
+		 * A subdivision of a country, of which the type is otherwise unknown
+		 */
+		SUBDIVISION,
+
 		PROVINCE,
 		STATE,
 		PARISH,
@@ -43,7 +50,8 @@ public interface Region
 		PREFECTURE,
 		CANTON,
 		LAND,
-		ISLAND
+		ISLAND,
+		NATION
 	}
 
 
