@@ -16,6 +16,8 @@
 package com.neovisionaries.i18n;
 
 
+import static com.neovisionaries.i18n.ScriptCode.getByCode;
+import static com.neovisionaries.i18n.ScriptCode.getByCodeIgnoreCase;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -26,84 +28,66 @@ import org.junit.Test;
 
 public class ScriptCodeTest
 {
-    private static ScriptCode getByCode(int code)
-    {
-        return ScriptCode.getByCode(code);
-    }
-
-
-    private static ScriptCode getByCode(String code)
-    {
-        return ScriptCode.getByCode(code);
-    }
-
-
-    private static ScriptCode getByCode(String code, boolean caseSensitive)
-    {
-        return ScriptCode.getByCode(code, caseSensitive);
-    }
-
-
     @Test
     public void test1()
     {
-        assertSame(getByCode("Jpan"), ScriptCode.Jpan);
+        assertSame(ScriptCode.Jpan, getByCode("Jpan"));
     }
 
 
     @Test
     public void test2()
     {
-        assertSame(getByCode("JPan"), ScriptCode.Jpan);
+        assertNull(getByCode("JPan"));
     }
 
 
     @Test
     public void test3()
     {
-        assertSame(getByCode("JpAn"), ScriptCode.Jpan);
+        assertNull(getByCode("JpAn"));
     }
 
 
     @Test
     public void test4()
     {
-        assertSame(getByCode("JpaN"), ScriptCode.Jpan);
+        assertNull(getByCode("JpaN"));
     }
 
 
     @Test
     public void test5()
     {
-        assertSame(getByCode("jpan"), ScriptCode.Jpan);
+        assertNull(getByCode("jpan"));
     }
 
 
     @Test
     public void test6()
     {
-        assertSame(getByCode("jPan"), ScriptCode.Jpan);
+        assertNull(getByCode("jPan"));
     }
 
 
     @Test
     public void test7()
     {
-        assertSame(getByCode("jpAn"), ScriptCode.Jpan);
+        assertNull(getByCode("jpAn"));
     }
 
 
     @Test
     public void test8()
     {
-        assertSame(getByCode("jpaN"), ScriptCode.Jpan);
+        assertNull(getByCode("jpaN"));
     }
 
 
     @Test
     public void test9()
     {
-        assertSame(getByCode("Jpan", true), ScriptCode.Jpan);
+        assertSame(ScriptCode.Jpan, getByCode("Jpan", true));
     }
 
 
@@ -264,7 +248,7 @@ public class ScriptCodeTest
     @Test
     public void test32()
     {
-        assertSame(getByCode(413), ScriptCode.Jpan);
+        assertSame(ScriptCode.Jpan, getByCode(413));
     }
 
 
@@ -283,5 +267,138 @@ public class ScriptCodeTest
 
         // Egyp : Egyptian hieroglyps
         assertTrue(list.contains(ScriptCode.Egyp));
+    }
+
+
+    @Test
+    public void test34()
+    {
+        assertSame(ScriptCode.Jpan, getByCode("Jpan", false));
+    }
+
+
+    @Test
+    public void test35()
+    {
+        assertSame(ScriptCode.Jpan, getByCode("JPan", false));
+    }
+
+
+    @Test
+    public void test36()
+    {
+        assertSame(ScriptCode.Jpan, getByCode("JpAn", false));
+    }
+
+
+    @Test
+    public void test37()
+    {
+        assertSame(ScriptCode.Jpan, getByCode("JpaN", false));
+    }
+
+
+    @Test
+    public void test38()
+    {
+        assertSame(ScriptCode.Jpan, getByCode("jpan", false));
+    }
+
+
+    @Test
+    public void test39()
+    {
+        assertSame(ScriptCode.Jpan, getByCode("jPan", false));
+    }
+
+
+    @Test
+    public void test40()
+    {
+        assertSame(ScriptCode.Jpan, getByCode("jpAn", false));
+    }
+
+
+    @Test
+    public void test41()
+    {
+        assertSame(ScriptCode.Jpan, getByCode("jpaN", false));
+    }
+
+
+    @Test
+    public void test42()
+    {
+        assertSame(ScriptCode.Jpan, getByCodeIgnoreCase("Jpan"));
+    }
+
+
+    @Test
+    public void test43()
+    {
+        assertSame(ScriptCode.Jpan, getByCodeIgnoreCase("JPan"));
+    }
+
+
+    @Test
+    public void test44()
+    {
+        assertSame(ScriptCode.Jpan, getByCodeIgnoreCase("JpAn"));
+    }
+
+
+    @Test
+    public void test45()
+    {
+        assertSame(ScriptCode.Jpan, getByCodeIgnoreCase("JpaN"));
+    }
+
+
+    @Test
+    public void test46()
+    {
+        assertSame(ScriptCode.Jpan, getByCodeIgnoreCase("jpan"));
+    }
+
+
+    @Test
+    public void test47()
+    {
+        assertSame(ScriptCode.Jpan, getByCodeIgnoreCase("jPan"));
+    }
+
+
+    @Test
+    public void test48()
+    {
+        assertSame(ScriptCode.Jpan, getByCodeIgnoreCase("jpAn"));
+    }
+
+
+    @Test
+    public void test49()
+    {
+        assertSame(ScriptCode.Jpan, getByCodeIgnoreCase("jpaN"));
+    }
+
+
+    @Test
+    public void test50()
+    {
+        assertSame(ScriptCode.Undefined, getByCode("Undefined"));
+    }
+
+
+    @Test
+    public void test51()
+    {
+        assertNull(getByCode("UNDEFINED"));
+    }
+
+
+    @Test
+    public void test52()
+    {
+        assertSame(ScriptCode.Undefined, getByCodeIgnoreCase("UNDEFINED"));
     }
 }

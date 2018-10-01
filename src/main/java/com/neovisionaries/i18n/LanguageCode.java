@@ -67,6 +67,24 @@ import java.util.regex.Pattern;
 public enum LanguageCode
 {
     /**
+     * Undefined.
+     *
+     * <p>
+     * This is not an official ISO 639-1 code.
+     * </p>
+     *
+     * @since 1.14
+     */
+    undefined()
+    {
+        @Override
+        public LanguageAlpha3Code getAlpha3()
+        {
+            return LanguageAlpha3Code.undefined;
+        }
+    },
+
+    /**
      * <a href="http://en.wikipedia.org/wiki/Afar_language">Afar</a>
      * ({@link LanguageAlpha3Code#aar aar}).
      */
@@ -2763,16 +2781,16 @@ public enum LanguageCode
      * (3-letter lowercase code).
      *
      * <p>
-     * This method calls {@link #getByCode(String, boolean)
-     * getByCode}{@code (code, false)}, meaning the case of the given
-     * code is ignored.
+     * This method calls {@link #getByCode(String, boolean) getByCode}{@code (code, true)}.
+     * Note that the behavior has changed since the version 1.13. In the older versions,
+     * this method was an alias of {@code getByCode(code, false)}.
      * </p>
      *
      * @param code
      *         An <a href="http://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a>
      *         code (2-letter lowercase code) or an
      *         <a href="http://en.wikipedia.org/wiki/ISO_639-2">ISO 639-2</a> code
-     *         (3-letter lowercase code).
+     *         (3-letter lowercase code). Or "undefined" (case sensitive).
      *         Note that if the given code is one of legacy language codes
      *         ("iw", "ji" and "in"), it is treated as its official counterpart
      *         ("he", "yi" and "id", respectively). For example, if "in" is given,
@@ -2782,6 +2800,38 @@ public enum LanguageCode
      *         A {@code LanguageCode} instance, or {@code null} if not found.
      */
     public static LanguageCode getByCode(String code)
+    {
+        return getByCode(code, true);
+    }
+
+
+    /**
+     * Get a {@code LanguageCode} that corresponds to a given
+     * <a href="http://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code
+     * (2-letter lowercase code) or
+     * <a href="http://en.wikipedia.org/wiki/ISO_639-2">ISO 639-2</a> code
+     * (3-letter lowercase code).
+     *
+     * <p>
+     * This method calls {@link #getByCode(String, boolean) getByCode}{@code (code, false)}.
+     * </p>
+     *
+     * @param code
+     *         An <a href="http://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a>
+     *         code (2-letter lowercase code) or an
+     *         <a href="http://en.wikipedia.org/wiki/ISO_639-2">ISO 639-2</a> code
+     *         (3-letter lowercase code). Or "undefined" (case insensitive).
+     *         Note that if the given code is one of legacy language codes
+     *         ("iw", "ji" and "in"), it is treated as its official counterpart
+     *         ("he", "yi" and "id", respectively). For example, if "in" is given,
+     *         this method returns {@link #id LanguageCode.id}.
+     *
+     * @return
+     *         A {@code LanguageCode} instance, or {@code null} if not found.
+     *
+     * @since 1.13
+     */
+    public static LanguageCode getByCodeIgnoreCase(String code)
     {
         return getByCode(code, false);
     }
@@ -2798,7 +2848,8 @@ public enum LanguageCode
      *         An <a href="http://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a>
      *         code (2-letter lowercase code) or an
      *         <a href="http://en.wikipedia.org/wiki/ISO_639-2">ISO 639-2</a> code
-     *         (3-letter lowercase code).
+     *         (3-letter lowercase code). Or "undefined" (its case sensitivity
+     *         depends on the value of {@code caseSensitive}).
      *         Note that if the given code is one of legacy language codes
      *         ("iw", "ji" and "in"), it is treated as its official counterpart
      *         ("he", "yi" and "id", respectively). For example, if "in" is given,
@@ -2823,14 +2874,17 @@ public enum LanguageCode
             return null;
         }
 
-        if (code.length() == 2)
+        switch (code.length())
         {
-            return getByEnumName(code);
-        }
+            case 2:
+            case 9:
+                return getByEnumName(code);
 
-        if (code.length() != 3)
-        {
-            return null;
+            case 3:
+                break;
+
+            default:
+                return null;
         }
 
         LanguageAlpha3Code alpha3 = LanguageAlpha3Code.getByEnumName(code);
@@ -2867,6 +2921,10 @@ public enum LanguageCode
      *
      * @return
      *         A {@code LanguageCode} instance, or {@code null} if not found.
+     *         When {@link Locale#getLanguage() getLanguage()} method of the
+     *         given {@code Locale} instance returns {@code null} or an
+     *         empty string, {@link #undefined LanguageCode.undefined} is
+     *         returned.
      *
      * @see Locale#getLanguage()
      */
@@ -2877,9 +2935,15 @@ public enum LanguageCode
             return null;
         }
 
-        // Locale.getLanguage() returns either an empty string or
-        // a lowercase ISO 639 code.
-        return getByCode(locale.getLanguage(), true);
+        // Locale.getLanguage() returns a lowercase ISO 639 code.
+        String language = locale.getLanguage();
+
+        if (language == null || language.length() == 0)
+        {
+            return LanguageCode.undefined;
+        }
+
+        return getByCode(language, true);
     }
 
 

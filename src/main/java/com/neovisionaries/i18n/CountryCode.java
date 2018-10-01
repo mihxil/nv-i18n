@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2014 Neo Visionaries Inc.
+ * Copyright (C) 2012-2015 Neo Visionaries Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,12 +90,46 @@ import java.util.regex.Pattern;
  * //     CountryCode.US : United States
  * //</span>
  * List&lt;CountryCode&gt; list = CountryCode.{@link #findByName(String) findByName}(<span style="color: darkred;">".*United.*"</span>);
+ *
+ * <span style="color: darkgreen;">
+ * // For backward compatibility for older versions than 1.16, some
+ * // 4-letter ISO 3166-3 codes are accepted by getByCode(String, boolean)
+ * // and its variants. To be concrete:
+ * //
+ * //     <a href="https://en.wikipedia.org/wiki/ISO_3166-3#ANHH">ANHH</a> : CountryCode.AN
+ * //     <a href="https://en.wikipedia.org/wiki/ISO_3166-3#BUMM">BUMM</a> : CountryCode.BU
+ * //     <a href="https://en.wikipedia.org/wiki/ISO_3166-3#CSXX">CSXX</a> : CountryCode.CS
+ * //     <a href="https://en.wikipedia.org/wiki/ISO_3166-3#NTHH">NTHH</a> : CountryCode.NT
+ * //     <a href="https://en.wikipedia.org/wiki/ISO_3166-3#TPTL">TPTL</a> : CountryCode.TP
+ * //     <a href="https://en.wikipedia.org/wiki/ISO_3166-3#YUCS">YUCS</a> : CountryCode.YU
+ * //     <a href="https://en.wikipedia.org/wiki/ISO_3166-3#ZRCD">ZRCD</a> : CountryCode.ZR
+ * //</span>
+ * code = CountryCode.{@link #getByCode(String) getByCode}(<span style="color: darkred;">"ANHH"</span>);
  * </pre>
  *
  * @author Takahiko Kawasaki
  */
-public enum CountryCode
+public enum CountryCode implements Region
 {
+
+    /**
+     * Undefined [UNDEFINED, null, -1, User assigned]
+     *
+     * <p>
+     * This is not an official ISO 3166-1 code.
+     * </p>
+     *
+     * @since 1.14
+     */
+    UNDEFINED("Undefined", null, -1, Assignment.USER_ASSIGNED)
+    {
+        @Override
+        public Locale toLocale()
+        {
+            return LocaleCode.undefined.toLocale();
+        }
+    },
+
     /**
      * <a href="http://en.wikipedia.org/wiki/Ascension_Island">Ascension Island</a>
      * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#AC">AC</a>, ASC, -1,
@@ -154,10 +188,15 @@ public enum CountryCode
 
     /**
      * <a href="http://en.wikipedia.org/wiki/Netherlands_Antilles">Netherlands Antilles</a>
-     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#AN">AN</a>, ANHH, 530,
+     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#AN">AN</a>, ANT, 530,
      * Traditionally reserved]
+     *
+     * <p>
+     * Since version 1.16, the value of alpha-3 code of this entry is {@code ANT}
+     * (not <code><a href="http://en.wikipedia.org/wiki/ISO_3166-3#ANHH">ANHH</a></code>).
+     * </p>
      */
-    AN("Netherlands Antilles", "ANHH", 530, Assignment.TRANSITIONALLY_RESERVED),
+    AN("Netherlands Antilles", "ANT", 530, Assignment.TRANSITIONALLY_RESERVED),
 
     /**
      * <a href="http://en.wikipedia.org/wiki/Angola">Angola</a>
@@ -212,8 +251,13 @@ public enum CountryCode
      * <a href="http://en.wikipedia.org/wiki/%C3%85land_Islands">&Aring;land Islands</a>
      * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#AX">AX</a>, ALA, 248,
      * Officially assigned]
+     *
+     * <p>
+     * The country name was changed from "\u212Bland Islands" (up to 1.14)
+     * to "\u00C5land Islands" (since 1.15).
+     * </p>
      */
-    AX("\u212Bland Islands", "ALA", 248, Assignment.OFFICIALLY_ASSIGNED),
+    AX("\u00C5land Islands", "ALA", 248, Assignment.OFFICIALLY_ASSIGNED),
 
     /**
      * <a href="http://en.wikipedia.org/wiki/Azerbaijan">Azerbaijan</a>
@@ -346,9 +390,14 @@ public enum CountryCode
      * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#BU">BU</a>, BUMM, 104,
      * Officially assigned]
      *
+     * <p>
+     * Since version 1.16, the value of alpha-3 code of this entry is {@code BUR}
+     * (not <code><a href="http://en.wikipedia.org/wiki/ISO_3166-3#BUMM">BUMM</a></code>).
+     * </p>
+     *
      * @see #MM
      */
-    BU("Burma", "BUMM", 104, Assignment.TRANSITIONALLY_RESERVED),
+    BU("Burma", "BUR", 104, Assignment.TRANSITIONALLY_RESERVED),
 
     /**
      * <a href="http://en.wikipedia.org/wiki/Bouvet_Island">Bouvet Island</a>
@@ -403,6 +452,8 @@ public enum CountryCode
      * <a href="http://en.wikipedia.org/wiki/Democratic_Republic_of_the_Congo">Congo, the Democratic Republic of the</a>
      * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#CD">CD</a>, COD, 180,
      * Officially assigned]
+     *
+     * @see #ZR
      */
     CD("Congo, the Democratic Republic of the", "COD", 180, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -492,10 +543,15 @@ public enum CountryCode
 
     /**
      * <a href="http://en.wikipedia.org/wiki/Serbia_and_Montenegro">Serbia and Montenegro</a>
-     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#CS">CS</a>, CSXX, 891,
+     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#CS">CS</a>, SCG, 891,
      * Traditionally reserved]
+     *
+     * <p>
+     * Since version 1.16, the value of alpha-3 code of this entry is {@code SCG}
+     * (not <code><a href="http://en.wikipedia.org/wiki/ISO_3166-3#CSXX">CSXX</a></code>).
+     * </p>
      */
-    CS("Serbia and Montenegro", "CSXX", 891, Assignment.TRANSITIONALLY_RESERVED),
+    CS("Serbia and Montenegro", "SCG", 891, Assignment.TRANSITIONALLY_RESERVED),
 
     /**
      * <a href="http://en.wikipedia.org/wiki/Cuba">Cuba</a>
@@ -660,6 +716,15 @@ public enum CountryCode
     EU("European Union", null, -1, Assignment.EXCEPTIONALLY_RESERVED),
 
     /**
+     * <a href="http://en.wikipedia.org/wiki/Eurozone">Eurozone</a>
+     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#EZ">EZ</a>, null, -1,
+     * Exceptionally reserved]
+     *
+     * @since 1.23
+     */
+    EZ("Eurozone", null, -1, Assignment.EXCEPTIONALLY_RESERVED),
+
+    /**
      * <a href="http://en.wikipedia.org/wiki/Finland">Finland</a>
      * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#FI">FI</a>, FIN, 246,
      * Officially assigned]
@@ -712,10 +777,14 @@ public enum CountryCode
 
     /**
      * <a href="http://en.wikipedia.org/wiki/Metropolitan_France">France, Metropolitan</a>
-     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#FX">FX</a>, FXX, -1,
+     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#FX">FX</a>, FXX, 249,
      * Exceptionally reserved]
+     *
+     * <p>
+     * Since version 1.17, the numeric code of this entry is 249.
+     * </p>
      */
-    FX("France, Metropolitan", "FXX", -1, Assignment.EXCEPTIONALLY_RESERVED),
+    FX("France, Metropolitan", "FXX", 249, Assignment.EXCEPTIONALLY_RESERVED),
 
     /**
      * <a href="http://en.wikipedia.org/wiki/Gabon">Gabon </a>
@@ -728,6 +797,8 @@ public enum CountryCode
      * <a href="http://en.wikipedia.org/wiki/United_Kingdom">United Kingdom</a>
      * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#GB">GB</a>, GBR, 826,
      * Officially assigned]
+     *
+     * @see #UK
      */
     GB("United Kingdom", "GBR", 826, Assignment.OFFICIALLY_ASSIGNED)
     {
@@ -1414,10 +1485,15 @@ public enum CountryCode
 
     /**
      * <a href="http://en.wikipedia.org/wiki/Saudi%E2%80%93Iraqi_neutral_zone">Neutral Zone</a>
-     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#NT">NT</a>, NTHH, 536,
+     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#NT">NT</a>, NTZ, 536,
      * Traditionally reserved]
+     *
+     * <p>
+     * Since version 1.16, the value of alpha-3 code of this entry is {@code NTZ}
+     * (not <code><a href="http://en.wikipedia.org/wiki/ISO_3166-3#NTHH">NTHH</a></code>).
+     * </p>
      */
-    NT("Neutral Zone", "NTHH", 536, Assignment.TRANSITIONALLY_RESERVED),
+    NT("Neutral Zone", "NTZ", 536, Assignment.TRANSITIONALLY_RESERVED),
 
     /**
      * <a href="http://en.wikipedia.org/wiki/Niue">Niue</a>
@@ -1710,10 +1786,14 @@ public enum CountryCode
 
     /**
      * <a href="http://en.wikipedia.org/wiki/Soviet_Union">USSR</a>
-     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#SU">SU</a>, SUN, -1,
+     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#SU">SU</a>, SUN, 810,
      * Exceptionally reserved]
+     *
+     * <p>
+     * Since version 1.17, the numeric code of this entry is 810.
+     * </p>
      */
-    SU("USSR", "SUN", -1, Assignment.EXCEPTIONALLY_RESERVED),
+    SU("USSR", "SUN", 810, Assignment.EXCEPTIONALLY_RESERVED),
 
     /**
      * <a href="http://en.wikipedia.org/wiki/El_Salvador">El Salvador</a>
@@ -1803,6 +1883,8 @@ public enum CountryCode
      * <a href="http://en.wikipedia.org/wiki/East_Timor">Timor-Leste</a>
      * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#TL">TL</a>, TLS, 626,
      * Officially assigned]
+     *
+     * @see #TM
      */
     TL("Timor-Leste", "TLS", 626, Assignment.OFFICIALLY_ASSIGNED),
 
@@ -1829,14 +1911,21 @@ public enum CountryCode
 
     /**
      * <a href="http://en.wikipedia.org/wiki/East_Timor">East Timor</a>
-     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#TP">TP</a>, TPTL, 0,
+     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#TP">TP</a>, TMP, 626,
      * Traditionally reserved]
      *
      * <p>
-     * ISO 3166-1 numeric code is unknown.
+     * Since version 1.16, the value of alpha-3 code of this entry is {@code TMP}
+     * (not <code><a href="http://en.wikipedia.org/wiki/ISO_3166-3#TPTL">TPTL</a></code>).
      * </p>
+     *
+     * <p>
+     * Since version 1.17, the numeric code of this entry is 626.
+     * </p>
+     *
+     * @see #TL
      */
-    TP("East Timor", "TPTL", 0, Assignment.TRANSITIONALLY_RESERVED),
+    TP("East Timor", "TMP", 626, Assignment.TRANSITIONALLY_RESERVED),
 
     /**
      * <a href="http://en.wikipedia.org/wiki/Turkey">Turkey</a>
@@ -1896,10 +1985,16 @@ public enum CountryCode
 
     /**
      * <a href="http://en.wikipedia.org/wiki/United_Kingdom">United Kingdom</a>
-     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#UK">UK</a>, null, -1,
+     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#UK">UK</a>, null, 826,
      * Exceptionally reserved]
+     *
+     * <p>
+     * Since version 1.17, the numeric code of this entry is 826.
+     * </p>
+     *
+     * @see #GB
      */
-    UK("United Kingdom", null, -1, Assignment.EXCEPTIONALLY_RESERVED)
+    UK("United Kingdom", null, 826, Assignment.EXCEPTIONALLY_RESERVED)
     {
         @Override
         public Locale toLocale()
@@ -2007,6 +2102,13 @@ public enum CountryCode
     WS("Samoa", "WSM", 882, Assignment.OFFICIALLY_ASSIGNED),
 
     /**
+     * <a href="http://en.wikipedia.org/wiki/Kosovo">Kosovo, Republic of</a>
+     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#XK">XK</a>, XXK, -1,
+     * User assigned]
+     */
+    XK("Kosovo, Republic of", "XXK", -1, Assignment.USER_ASSIGNED),
+
+    /**
      * <a href="http://en.wikipedia.org/wiki/Yemen">Yemen</a>
      * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#YE">YE</a>, YEM, 887,
      * Officially assigned]
@@ -2022,10 +2124,15 @@ public enum CountryCode
 
     /**
      * <a href="http://en.wikipedia.org/wiki/Yugoslavia">Yugoslavia</a>
-     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#YU">YU</a>, YUCS, 890,
+     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#YU">YU</a>, YUG, 890,
      * Traditionally reserved]
+     *
+     * <p>
+     * Since version 1.16, the value of alpha-3 code of this entry is {@code YUG}
+     * (not <code><a href="http://en.wikipedia.org/wiki/ISO_3166-3#YUCS">YUCS</a></code>).
+     * </p>
      */
-    YU("Yugoslavia", "YUCS", 890, Assignment.TRANSITIONALLY_RESERVED),
+    YU("Yugoslavia", "YUG", 890, Assignment.TRANSITIONALLY_RESERVED),
 
     /**
      * <a href="http://en.wikipedia.org/wiki/South_Africa">South Africa</a>
@@ -2043,14 +2150,21 @@ public enum CountryCode
 
     /**
      * <a href="http://en.wikipedia.org/wiki/Zaire">Zaire</a>
-     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#ZR">ZR</a>, ZRCD, 0,
+     * [<a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#ZR">ZR</a>, ZAR, 180,
      * Traditionally reserved]
      *
      * <p>
-     * ISO 3166-1 numeric code is unknown.
+     * Since version 1.16, the value of alpha-3 code of this entry is {@code ZAR}
+     * (not <code><a href="http://en.wikipedia.org/wiki/ISO_3166-3#ZRCD">ZRCD</a></code>).
      * </p>
+     *
+     * <p>
+     * Since version 1.17, the numeric code of this entry is 180.
+     * </p>
+     *
+     * @see #CD
      */
-    ZR("Zaire", "ZRCD", 0, Assignment.TRANSITIONALLY_RESERVED),
+    ZR("Zaire", "ZAR", 180, Assignment.TRANSITIONALLY_RESERVED),
 
     /**
      * <a href="http://en.wikipedia.org/wiki/Zimbabwe">Zimbabwe</a>
@@ -2219,6 +2333,7 @@ public enum CountryCode
 
 
     private static final Map<String, CountryCode> alpha3Map = new HashMap<String, CountryCode>();
+    private static final Map<String, CountryCode> alpha4Map = new HashMap<String, CountryCode>();
     private static final Map<Integer, CountryCode> numericMap = new HashMap<Integer, CountryCode>();
 
 
@@ -2233,9 +2348,36 @@ public enum CountryCode
 
             if (cc.getNumeric() != -1)
             {
-                numericMap.put(cc.getNumeric(), cc);
+                numericMap.put(Integer.valueOf(cc.getNumeric()), cc);
             }
         }
+
+        // FI and SF have the same alpha-3 code "FIN". FI should be used.
+        alpha3Map.put("FIN", FI);
+
+        // For backward compatibility.
+        alpha4Map.put("ANHH", AN);
+        alpha4Map.put("BUMM", BU);
+        alpha4Map.put("CSXX", CS);
+        alpha4Map.put("NTHH", NT);
+        alpha4Map.put("TPTL", TP);
+        alpha4Map.put("YUCS", YU);
+        alpha4Map.put("ZRCD", ZR);
+
+        // BU and MM have the same numeric code 104. MM should be used.
+        numericMap.put(Integer.valueOf(104), MM);
+
+        // CD and ZR have the same numeric code 180. CD should be used.
+        numericMap.put(Integer.valueOf(180), CD);
+
+        // FI and SF have the same numeric code 246. FI should be used.
+        numericMap.put(Integer.valueOf(246), FI);
+
+        // GB and UK have the same numeric code 826. GB should be used.
+        numericMap.put(Integer.valueOf(826), GB);
+
+        // TL and TP have the same numeric code 626. TL should be used.
+        numericMap.put(Integer.valueOf(626), TL);
     }
 
 
@@ -2273,6 +2415,8 @@ public enum CountryCode
      * @return
      *         The <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"
      *         >ISO 3166-1 alpha-2</a> code.
+     *         {@link CountryCode#UNDEFINED} returns {@code "UNDEFINED"}
+     *         which is not an official ISO 3166-1 alpha-2 code.
      */
     public String getAlpha2()
     {
@@ -2289,6 +2433,7 @@ public enum CountryCode
      *         >ISO 3166-1 alpha-3</a> code.
      *         Some country codes reserved exceptionally (such as {@link #EU})
      *         returns {@code null}.
+     *         {@link CountryCode#UNDEFINED} returns {@code null}, too.
      */
     public String getAlpha3()
     {
@@ -2305,6 +2450,7 @@ public enum CountryCode
      *         >ISO 3166-1 numeric</a> code.
      *         Country codes reserved exceptionally (such as {@link #EU})
      *         returns {@code -1}.
+     *         {@link CountryCode#UNDEFINED} returns {@code -1}, too.
      */
     public int getNumeric()
     {
@@ -2390,6 +2536,16 @@ public enum CountryCode
      * </tr>
      * </table>
      *
+     * <p>
+     * In addition, {@code toLocale()} of {@link CountryCode#UNDEFINED
+     * CountryCode.UNDEFINED} behaves a bit differently. It returns
+     * {@link Locale#ROOT Locale.ROOT} when it is available (i.e. when
+     * the version of Java SE is 1.6 or higher). Otherwise, it returns
+     * a {@code Locale} instance whose language and country are empty
+     * strings. Even in the latter case, the same instance is returned
+     * on every call.
+     * </p>
+     *
      * @return
      *         A {@code Locale} instance that matches this {@code CountryCode}.
      */
@@ -2453,15 +2609,20 @@ public enum CountryCode
      * <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3">alpha-3</a> code.
      *
      * <p>
-     * This method calls {@link #getByCode(String, boolean)
-     * getByCode}{@code (code, false)}, meaning the case of the given
-     * code is ignored.
+     * This method calls {@link #getByCode(String, boolean) getByCode}{@code (code, true)}.
+     * Note that the behavior has changed since the version 1.13. In the older versions,
+     * this method was an alias of {@code getByCode(code, false)}.
      * </p>
      *
      * @param code
      *         An ISO 3166-1 <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"
      *         >alpha-2</a> or <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3"
      *         >alpha-3</a> code.
+     *         When {@code "UNDEFINED"} is given, {@link #UNDEFINED CountryCode.UNDEFINED}
+     *         is returned.
+     *         In addition, for backward compatibility, some 4-letter <a href=
+     *         "https://en.wikipedia.org/wiki/ISO_3166-3">ISO 3166-3</a> codes such
+     *         as {@code "ANHH"} are accepted.
      *
      * @return
      *         A {@code CountryCode} instance, or {@code null} if not found.
@@ -2469,6 +2630,36 @@ public enum CountryCode
      * @see #getByCode(String, boolean)
      */
     public static CountryCode getByCode(String code)
+    {
+        return getByCode(code, true);
+    }
+
+
+    /**
+     * Get a {@code CountryCode} that corresponds to the given ISO 3166-1
+     * <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">alpha-2</a> or
+     * <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3">alpha-3</a> code.
+     *
+     * <p>
+     * This method calls {@link #getByCode(String, boolean) getByCode}{@code (code, false)}.
+     * </p>
+     *
+     * @param code
+     *         An ISO 3166-1 <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"
+     *         >alpha-2</a> or <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3"
+     *         >alpha-3</a> code. Or {@code "UNDEFINED"} (case insensitive).
+     *         In addition, for backward compatibility, some 4-letter <a href=
+     *         "https://en.wikipedia.org/wiki/ISO_3166-3">ISO 3166-3</a> codes such
+     *         as {@code "ANHH"} are accepted.
+     *
+     * @return
+     *         A {@code CountryCode} instance, or {@code null} if not found.
+     *
+     * @since 1.13
+     *
+     * @see #getByCode(String, boolean)
+     */
+    public static CountryCode getByCodeIgnoreCase(String code)
     {
         return getByCode(code, false);
     }
@@ -2483,6 +2674,11 @@ public enum CountryCode
      *         An ISO 3166-1 <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"
      *         >alpha-2</a> or <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3"
      *         >alpha-3</a> code.
+     *         Or {@code "UNDEFINED"} (its case sensitivity depends on the value of
+     *         {@code caseSensitive}).
+     *         In addition, for backward compatibility, some 4-letter <a href=
+     *         "https://en.wikipedia.org/wiki/ISO_3166-3">ISO 3166-3</a> codes such
+     *         as {@code "ANHH"} are accepted.
      *
      * @param caseSensitive
      *         If {@code true}, the given code should consist of upper-case letters only.
@@ -2511,6 +2707,18 @@ public enum CountryCode
                 code = canonicalize(code, caseSensitive);
                 return getByAlpha3Code(code);
 
+            case 4:
+                code = canonicalize(code, caseSensitive);
+                return getByAlpha4Code(code);
+
+            case 9:
+                code = canonicalize(code, caseSensitive);
+                if ("UNDEFINED".equals(code))
+                {
+                    return CountryCode.UNDEFINED;
+                }
+                // FALLTHROUGH
+
             default:
                 return null;
         }
@@ -2526,6 +2734,10 @@ public enum CountryCode
      *
      * @return
      *         A {@code CountryCode} instance, or {@code null} if not found.
+     *         When {@link Locale#getCountry() getCountry()} method of the
+     *         given {@code Locale} instance returns {@code null} or an
+     *         empty string, {@link #UNDEFINED CountryCode.UNDEFINED} is
+     *         returned.
      *
      * @see Locale#getCountry()
      */
@@ -2536,9 +2748,15 @@ public enum CountryCode
             return null;
         }
 
-        // Locale.getCountry() returns either an empty string or
-        // an uppercase ISO 3166 2-letter code.
-        return getByCode(locale.getCountry(), true);
+        // Locale.getCountry() returns an uppercase ISO 3166 2-letter code.
+        String country = locale.getCountry();
+
+        if (country == null || country.length() == 0)
+        {
+            return CountryCode.UNDEFINED;
+        }
+
+        return getByCode(country, true);
     }
 
 
@@ -2576,7 +2794,20 @@ public enum CountryCode
     }
 
 
-    private static CountryCode getByAlpha2Code(String code)
+    /**
+     * Get a {@code CountryCode} that corresponds to the given ISO 3166-1
+     * <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">alpha-2</a> code.
+     *
+     * @param code
+     *         An ISO 3166-1 <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"
+     *         >alpha-2</a> code.
+     *
+     * @return
+     *         A {@code CountryCode} instance, or {@code null} if not found.
+     *
+     * @since 1.23
+     */
+    public static CountryCode getByAlpha2Code(String code)
     {
         try
         {
@@ -2589,9 +2820,81 @@ public enum CountryCode
     }
 
 
-    private static CountryCode getByAlpha3Code(String code)
+    /**
+     * Get a {@code CountryCode} that corresponds to the given ISO 3166-1
+     * <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3">alpha-3</a> code.
+     *
+     * @param code
+     *         An ISO 3166-1 <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3"
+     *         >alpha-3</a> code.
+     *
+     * @return
+     *         A {@code CountryCode} instance, or {@code null} if not found.
+     *
+     * @since 1.23
+     */
+    public static CountryCode getByAlpha3Code(String code)
     {
         return alpha3Map.get(code);
+    }
+
+
+    /**
+     * Get a {@code CountryCode} that corresponds to the given alpha-4 code.
+     *
+     * <p>
+     * Recognized alpha-4 codes are listed in the table below.
+     * </p>
+     *
+     * <br>
+     * <blockquote>
+     * <table border="1" style="border-collapse: collapse" cellpadding="5">
+     * <tr bgcolor="orange">
+     *   <th>Alpha-4 Code</th>
+     *   <th><code>CountryCode</code></th>
+     * </tr>
+     * <tr align="center">
+     *   <td><code>ANHH</code></td>
+     *   <td>{@link #AN}</td>
+     * </tr>
+     * <tr align="center">
+     *   <td><code>BUMM</code></td>
+     *   <td>{@link #BU}</td>
+     * </tr>
+     * <tr align="center">
+     *   <td><code>CSXX</code></td>
+     *   <td>{@link #CS}</td>
+     * </tr>
+     * <tr align="center">
+     *   <td><code>NTHH</code></td>
+     *   <td>{@link #NT}</td>
+     * </tr>
+     * <tr align="center">
+     *   <td><code>TPTL</code></td>
+     *   <td>{@link #TP}</td>
+     * </tr>
+     * <tr align="center">
+     *   <td><code>YUCS</code></td>
+     *   <td>{@link #YU}</td>
+     * </tr>
+     * <tr align="center">
+     *   <td><code>ZRCD</code></td>
+     *   <td>{@link #ZR}</td>
+     * </tr>
+     * </table>
+     * </blockquote>
+     *
+     * @param code
+     *         Alpha-4 code.
+     *
+     * @return
+     *         A {@code CountryCode} instance, or {@code null} if not found.
+     *
+     * @since 1.23
+     */
+    public static CountryCode getByAlpha4Code(String code)
+    {
+        return alpha4Map.get(code);
     }
 
 
@@ -2600,15 +2903,69 @@ public enum CountryCode
      * <a href="http://en.wikipedia.org/wiki/ISO_3166-1_numeric">ISO 3166-1
      * numeric</a> code.
      *
+     * <p>
+     * Note that there are some pairs each of which shares the same numeric code.
+     * The following table shows such pairs and which {@code CountryCode} instance
+     * is returned from this method.
+     * </p>
+     *
+     * <br>
+     * <blockquote>
+     * <table border="1" style="border-collapse: collapse" cellpadding="5">
+     * <tr bgcolor="orange">
+     *   <th>Shared Numeric Code</th>
+     *   <th colspan="2">Alpha-3 Codes</th>
+     *   <th>Returned Alpha-3 Code</th>
+     * </tr>
+     * <tr>
+     *   <td align="center">104</td>
+     *   <td align="center">{@link #BU}</td>
+     *   <td align="center">{@link #MM}</td>
+     *   <td align="center">{@link #MM}</td>
+     * </tr>
+     * <tr>
+     *   <td align="center">180</td>
+     *   <td align="center">{@link #CD}</td>
+     *   <td align="center">{@link #ZR}</td>
+     *   <td align="center">{@link #CD}</td>
+     * </tr>
+     * <tr>
+     *   <td align="center">246</td>
+     *   <td align="center">{@link #FI}</td>
+     *   <td align="center">{@link #SF}</td>
+     *   <td align="center">{@link #FI}</td>
+     * </tr>
+     * <tr>
+     *   <td align="center">826</td>
+     *   <td align="center">{@link #GB}</td>
+     *   <td align="center">{@link #UK}</td>
+     *   <td align="center">{@link #GB}</td>
+     * </tr>
+     * <tr>
+     *   <td align="center">626</td>
+     *   <td align="center">{@link #TL}</td>
+     *   <td align="center">{@link #TP}</td>
+     *   <td align="center">{@link #TL}</td>
+     * </tr>
+     * </table>
+     * </blockquote>
+     * <br>
+     *
      * @param code
      *         An <a href="http://en.wikipedia.org/wiki/ISO_3166-1_numeric"
      *         >ISO 3166-1 numeric</a> code.
      *
      * @return
      *         A {@code CountryCode} instance, or {@code null} if not found.
+     *         If 0 or a negative value is given, {@code null} is returned.
      */
     public static CountryCode getByCode(int code)
     {
+        if (code <= 0)
+        {
+            return null;
+        }
+
         return numericMap.get(code);
     }
 

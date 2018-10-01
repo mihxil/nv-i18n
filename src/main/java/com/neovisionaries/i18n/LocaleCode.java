@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2014 Neo Visionaries Inc.
+ * Copyright (C) 2012-2017 Neo Visionaries Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.neovisionaries.i18n;
 
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -71,6 +72,20 @@ import java.util.Locale;
  */
 public enum LocaleCode
 {
+   /**
+     * {@link LanguageCode#undefined Undefined}, {@link CountryCode#UNDEFINED Undefined}
+     *
+     * @since 1.14
+     */
+    undefined(LanguageCode.undefined, CountryCode.UNDEFINED)
+    {
+        @Override
+        public Locale toLocale()
+        {
+            return undefinedLocale;
+        }
+    },
+
     /**
      * {@link LanguageCode#ar Arabic}
      */
@@ -286,6 +301,13 @@ public enum LocaleCode
     en_GB(LanguageCode.en, CountryCode.GB),
 
     /**
+     * {@link LanguageCode#en English}, {@link CountryCode#HK Hong Kong}
+     *
+     * @since 1.22
+     */
+    en_HK(LanguageCode.en, CountryCode.HK),
+
+    /**
      * {@link LanguageCode#en English}, {@link CountryCode#IE Ireland}
      */
     en_IE(LanguageCode.en, CountryCode.IE),
@@ -439,6 +461,20 @@ public enum LocaleCode
      * {@link LanguageCode#et Estonian}, {@link CountryCode#EE Estonia}
      */
     et_EE(LanguageCode.et, CountryCode.EE),
+
+    /**
+     * {@link LanguageCode#fa Farsi}
+     *
+     * @since 1.21
+     */
+    fa(LanguageCode.fa, null),
+
+    /**
+     * {@link LanguageCode#fa Farsi}, {@link CountryCode#IR Iran}
+     *
+     * @since 1.21
+     */
+    fa_IR(LanguageCode.fa, CountryCode.IR),
 
     /**
      * {@link LanguageCode#fi Finnish}
@@ -597,6 +633,13 @@ public enum LocaleCode
      * {@link LanguageCode#ja Japanese}, {@link CountryCode#JP Japan}
      */
     ja_JP(LanguageCode.ja, CountryCode.JP),
+
+    /**
+     * {@link LanguageCode#kk Kazakh}, {@link CountryCode#KZ Kazakhstan}
+     *
+     * @since 1.22
+     */
+    kk_KZ(LanguageCode.kk, CountryCode.KZ),
 
     /**
      * {@link LanguageCode#ko Korean}
@@ -762,6 +805,13 @@ public enum LocaleCode
      * {@link LanguageCode#ru Russian}
      */
     ru(LanguageCode.ru, null),
+
+    /**
+     * {@link LanguageCode#ru Russian}, {@link CountryCode#KZ Kazakhstan}
+     *
+     * @since 1.22
+     */
+    ru_KZ(LanguageCode.ru, CountryCode.KZ),
 
     /**
      * {@link LanguageCode#ru Russian}, {@link CountryCode#RU Russian Federation}
@@ -935,6 +985,8 @@ public enum LocaleCode
     ;
 
 
+    private static final Locale undefinedLocale = getUndefinedLocale();
+
     private final LanguageCode language;
     private final CountryCode country;
     private final String string;
@@ -1009,20 +1061,20 @@ public enum LocaleCode
 
 
     /**
-     * Convert this LocaleCode instance to a {@link Locale} instance.
+     * Convert this {@code LocaleCode} instance to a {@link Locale} instance.
      *
      * <p>
-     * In most cases, this method creates a new Locale instance
-     * every time it is called, but some LocaleCode instancess
-     * return their corresponding entries in Locale class.
+     * In most cases, this method creates a new {@code Locale} instance
+     * every time it is called, but some {@code LocaleCode} instances
+     * return their corresponding entries in {@code Locale} class.
      * For example, {@link #it LocaleCode.it} always returns
      * {@link Locale#ITALIAN}.
      * </p>
      *
      * <p>
-     * The table below lists LocaleCode entries whose toLocale()
-     * do not create new Locale instances but return entries in
-     * Locale class.
+     * The table below lists {@code LocaleCode} entries whose {@code toLocale()}
+     * does not create a new {@code Locale} instance but returns an entry in
+     * {@code Locale} class.
      * </p>
      *
      * <table border="1" style="border-collapse: collapse;" cellpadding="5">
@@ -1072,8 +1124,18 @@ public enum LocaleCode
      * </tr>
      * </table>
      *
+     * <p>
+     * In addition, {@code toLocale()} of {@link LocaleCode#undefined
+     * LocaleCode.undefined} behaves a bit differently. It returns
+     * {@link Locale#ROOT Locale.ROOT} when it is available (i.e. when
+     * the version of Java SE is 1.6 or higher). Otherwise, it returns
+     * a {@code Locale} instance whose language and country are empty
+     * strings. Even in the latter case, the same instance is returned
+     * on every call.
+     * </p>
+     *
      * @return
-     *         A Locale instance that matches this LocaleCode.
+     *         A {@code Locale} instance that matches this {@code LocaleCode}.
      */
     public Locale toLocale()
     {
@@ -1092,8 +1154,9 @@ public enum LocaleCode
      * Get a {@code LocaleCode} instance that corresponds to the given code.
      *
      * <p>
-     * This method just calls {@link #getByCode(String, boolean)
-     * getByCode}{@code (code, false)}.
+     * This method just calls {@link #getByCode(String, boolean) getByCode}{@code (code, true)}.
+     * Note that the behavior has changed since the version 1.13. In the older versions,
+     * this method was an alias of {@code getByCode(code, false)}.
      * </p>
      *
      * @param code
@@ -1105,6 +1168,29 @@ public enum LocaleCode
      * @see #getByCode(String, boolean)
      */
     public static LocaleCode getByCode(String code)
+    {
+        return getByCode(code, true);
+    }
+
+
+    /**
+     * Get a {@code LocaleCode} instance that corresponds to the given code.
+     *
+     * <p>
+     * This method just calls {@link #getByCode(String, boolean) getByCode}{@code (code, false)}.
+     * </p>
+     *
+     * @param code
+     *         A locale code.
+     *
+     * @return
+     *         A {@code LocaleCode} instance, or {@code null} if not found.
+     *
+     * @since 1.13
+     *
+     * @see #getByCode(String, boolean)
+     */
+    public static LocaleCode getByCodeIgnoreCase(String code)
     {
         return getByCode(code, false);
     }
@@ -1135,7 +1221,7 @@ public enum LocaleCode
      * <p>
      * Note that if the language part of the given code is one of legacy
      * ones { "iw", "ji" and "in" }, it is regarded as its newer official
-     * counterpart { "he", "yi" and "id", respectively }.
+     * counterpart { "he", "yi" and "id" }, respectively.
      * </p>
      *
      * @param code
@@ -1160,15 +1246,54 @@ public enum LocaleCode
         switch (code.length())
         {
             case 2:
+            case 9:
                 // The given code is regarded as a language code.
                 return getByCode(code, null, caseSensitive);
 
             case 5:
-                return getByCode5(code, caseSensitive);
+                return getByCombinedCode(code, caseSensitive, 2);
+
+            case 19:
+                return getByCombinedCode(code, caseSensitive, 9);
 
             default:
                 return null;
         }
+    }
+
+
+    /**
+     * Get a {@code LocaleCode} instance that corresponds to the given pair of
+     * language code and country code.
+     *
+     * <p>
+     * This method just calls {@link #getByCode(String, String, boolean)
+     * getByCode}{@code (language, country, true)}.
+     * Note that the behavior has changed since the version 1.13.
+     * In the older versions, this method was an alias of {@code
+     * getByCode(language, country, false)}.
+     * </p>
+     *
+     * @param language
+     *         <a href="href="http://en.wikipedia.org/wiki/ISO_639-1"
+     *         >ISO 639-1</a> language code. Or "undefined" (case
+     *         sensitive). If the given language code is one of legacy
+     *         ones { "iw", "ji" and "in" }, it is regarded as its newer
+     *         official counterpart { "he", "yi" and "id" }, respectively.
+     *
+     * @param country
+     *         <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"
+     *         >ISO 3166-1 alpha-2</a> country code. Or "UNDEFINED"
+     *         (case sensitive).
+     *
+     * @return
+     *         A {@code LocaleCode}, or {@code null} if not found.
+     *
+     * @see #getByCode(String, String, boolean)
+     */
+    public static LocaleCode getByCode(String language, String country)
+    {
+        return getByCode(language, country, true);
     }
 
 
@@ -1183,21 +1308,24 @@ public enum LocaleCode
      *
      * @param language
      *         <a href="href="http://en.wikipedia.org/wiki/ISO_639-1"
-     *         >ISO 639-1</a> language code. If the given language code
-     *         is one of legacy ones { "iw", "ji" and "in" }, it is
-     *         regarded as its newer official counterpart { "he", "yi"
-     *         and "id", respectively }.
+     *         >ISO 639-1</a> language code. Or "undefined" (case
+     *         insensitive). If the given language code is one of legacy
+     *         ones { "iw", "ji" and "in" }, it is regarded as its newer
+     *         official counterpart { "he", "yi" and "id" }, respectively.
      *
      * @param country
      *         <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"
-     *         >ISO 3166-1 alpha-2</a> country code.
+     *         >ISO 3166-1 alpha-2</a> country code. Or "UNDEFINED"
+     *         (case insensitive).
      *
      * @return
      *         A {@code LocaleCode}, or {@code null} if not found.
      *
+     * @since 1.13
+     *
      * @see #getByCode(String, String, boolean)
      */
-    public static LocaleCode getByCode(String language, String country)
+    public static LocaleCode getByCodeIgnoreCase(String language, String country)
     {
         return getByCode(language, country, false);
     }
@@ -1207,16 +1335,21 @@ public enum LocaleCode
      * Get a {@code LocaleCode} instance that corresponds to the given pair of
      * language code and country code.
      *
+     * <p>
+     * If {@code language} is "undefined" and if {@code country} is {@code null}
+     * or "UNDEFINED", {@link #undefined LocaleCode.undefined} is returned.
+     * </p>
+     *
      * @param language
      *         <a href="href="http://en.wikipedia.org/wiki/ISO_639-1"
-     *         >ISO 639-1</a> language code. If the given language code
-     *         is one of legacy ones { "iw", "ji" and "in" }, it is
-     *         regarded as its newer official counterpart { "he", "yi"
-     *         and "id", respectively }.
+     *         >ISO 639-1</a> language code. Or "undefined".
+     *         If the given language code is one of legacy ones { "iw",
+     *         "ji" and "in" }, it is regarded as its newer official
+     *         counterpart { "he", "yi" and "id" }, respectively.
      *
      * @param country
      *         <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"
-     *         >ISO 3166-1 alpha-2</a> country code.
+     *         >ISO 3166-1 alpha-2</a> country code. Or "UNDEFINED".
      *
      * @param caseSensitive
      *         If {@code true}, the given language code must be lower-case and
@@ -1241,6 +1374,11 @@ public enum LocaleCode
         // Canonicalize the given country code.
         country = CountryCode.canonicalize(country, caseSensitive);
 
+        if (language.equals("undefined") && (country == null || country.equals("UNDEFINED")))
+        {
+            return LocaleCode.undefined;
+        }
+
         if (country == null)
         {
             return getByEnumName(language);
@@ -1249,7 +1387,6 @@ public enum LocaleCode
         {
             return getByEnumName(language + "_" + country);
         }
-
     }
 
 
@@ -1262,6 +1399,11 @@ public enum LocaleCode
      *
      * @return
      *         A {@code LocaleCode} instance, or {@code null} if not found.
+     *         When the value returned by {@link Locale#getLanguage() getLanguage()}
+     *         method of the given instance is {@code null} or an empty string and
+     *         the value returned by {@link Locale#getCountry() getCountry()} method
+     *         of the given instance is {@code null} or an empty string,
+     *         {@link #undefined LocaleCode.undefined} is returned.
      */
     public static LocaleCode getByLocale(Locale locale)
     {
@@ -1278,20 +1420,26 @@ public enum LocaleCode
         // a upper-case ISO 3166-1 alphe-2 code.
         String country = locale.getCountry();
 
+        if ((language == null || language.length() == 0) &&
+            (country  == null || country.length()  == 0))
+        {
+            return LocaleCode.undefined;
+        }
+
         // 'language' and 'country' are already lower-case and upper-case,
         // so true can be given as the third argument.
         return getByCode(language, country, true);
     }
 
 
-    private static LocaleCode getByCode5(String code, boolean caseSensitive)
+    private static LocaleCode getByCombinedCode(String code, boolean caseSensitive, int splitPosition)
     {
         // Get the character that separates the language code from the country code.
-        char separator = code.charAt(2);
+        char separator = code.charAt(splitPosition);
 
         if (separator == '_')
         {
-            if (caseSensitive)
+            if (caseSensitive && splitPosition == 2)
             {
                 // The given code can be handled as enum name.
                 return getByEnumName(code);
@@ -1304,8 +1452,8 @@ public enum LocaleCode
         }
 
         // Extract the language part and the country part from the given code.
-        String language = code.substring(0, 2);
-        String country = code.substring(3);
+        String language = code.substring(0, splitPosition);
+        String country  = code.substring(splitPosition + 1);
 
         return getByCode(language, country, caseSensitive);
     }
@@ -1329,7 +1477,9 @@ public enum LocaleCode
      *
      * <p>
      * This method is an alias of {@link #getByLanguage(String, boolean)
-     * getByLanguage}{@code (language, false)}.
+     * getByLanguage}{@code (language, true)}.
+     * Note that the behavior has changed since the version 1.13. In the older versions,
+     * this method was an alias of {@code getByLanguage(language, false)}.
      * </p>
      *
      * @param language
@@ -1343,6 +1493,30 @@ public enum LocaleCode
      * @since 1.3
      */
     public static List<LocaleCode> getByLanguage(String language)
+    {
+        return getByLanguage(language, true);
+    }
+
+
+    /**
+     * Get a list of {@code LocaleCode} instances whose language matches the given one.
+     *
+     * <p>
+     * This method is an alias of {@link #getByLanguage(String, boolean)
+     * getByLanguage}{@code (language, false)}.
+     * </p>
+     *
+     * @param language
+     *         Language code. ISO 639 alpha-2 or alpha-3.
+     *
+     * @return
+     *         List of {@code LocaleCode} instances. If there is no {@code LocaleCode}
+     *         instance whose language matches the given one, the size of the returned
+     *         list is zero.
+     *
+     * @since 1.13
+     */
+    public static List<LocaleCode> getByLanguageIgnoreCase(String language)
     {
         return getByLanguage(language, false);
     }
@@ -1416,7 +1590,9 @@ public enum LocaleCode
      *
      * <p>
      * This method is an alias of {@link #getByCountry(String, boolean)
-     * getByCountry}{@code (country, false)}.
+     * getByCountry}{@code (country, true)}.
+     * Note that the behavior has changed since the version 1.13. In the older versions,
+     * this method was an alias of {@code getByCountry(country, false)}.
      * </p>
      *
      * @param country
@@ -1430,6 +1606,30 @@ public enum LocaleCode
      * @since 1.3
      */
     public static List<LocaleCode> getByCountry(String country)
+    {
+        return getByCountry(country, true);
+    }
+
+
+    /**
+     * Get a list of {@code LocaleCode} instances whose country matches the given one.
+     *
+     * <p>
+     * This method is an alias of {@link #getByCountry(String, boolean)
+     * getByCountry}{@code (country, false)}.
+     * </p>
+     *
+     * @param country
+     *         Country code. ISO 3166-1 alpha-2 or alpha-3.
+     *
+     * @return
+     *         List of {@code LocaleCode} instances. If there is no {@code LocaleCode}
+     *         instance whose country matches the given one, the size of the returned
+     *         list is zero.
+     *
+     * @since 1.13
+     */
+    public static List<LocaleCode> getByCountryIgnoreCase(String country)
     {
         return getByCountry(country, false);
     }
@@ -1496,5 +1696,23 @@ public enum LocaleCode
         }
 
         return list;
+    }
+
+
+    private static Locale getUndefinedLocale()
+    {
+        try
+        {
+            // Try to get Locale.ROOT which is available since Java SE 1.6.
+            Field root = Locale.class.getDeclaredField("ROOT");
+
+            // Return Locale.ROOT.
+            return (Locale)root.get(null);
+        }
+        catch (Exception e)
+        {
+            // Simulate Locale.ROOT.
+            return new Locale("", "");
+        }
     }
 }

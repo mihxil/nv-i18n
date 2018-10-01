@@ -31,6 +31,21 @@ import java.util.regex.Pattern;
  */
 public enum ScriptCode
 {
+
+    /**
+     * Undefined [-1]
+     *
+     * <p>
+     * This is not an official ISO 15924 code.
+     * </p>
+     *
+     * @since 1.14
+     * @see #Zxxx Zxxx: 997 Code for unwritten languages
+     * @see #Zyyy Zyyy: 998 Code for undetermined script
+     * @see #Zzzz Zzzz: 999 Code for uncoded script
+     */
+    Undefined(-1, "Undefined"),
+
     /**
      * Afaka [439]
      */
@@ -1020,7 +1035,10 @@ public enum ScriptCode
     {
         for (ScriptCode sc : values())
         {
-            numericMap.put(sc.getNumeric(), sc);
+            if (sc.getNumeric() != -1)
+            {
+                numericMap.put(sc.getNumeric(), sc);
+            }
         }
     }
 
@@ -1076,18 +1094,40 @@ public enum ScriptCode
      * ISO 15924 alpha-4 code.
      *
      * <p>
-     * This method calls {@link #getByCode(String, boolean)
-     * getByCode}{@code (code, false)}, meaning the case of the given
-     * code is ignored.
+     * This method calls {@link #getByCode(String, boolean) getByCode}{@code (code, true)}.
+     * Note that the behavior has changed since the version 1.13. In the older versions,
+     * this method was an alias of {@code getByCode(code, false)}.
      * </p>
      *
      * @param code
-     *         ISO 15924 alpha-4 code.
+     *         ISO 15924 alpha-4 code. Or "Undefined" (case sensitive).
      *
      * @return
      *         A {@code ScriptCode} instance, or {@code null} if not found.
      */
     public static ScriptCode getByCode(String code)
+    {
+        return getByCode(code, true);
+    }
+
+
+    /**
+     * Get a {@code ScriptCode} instance that corresponds to the given
+     * ISO 15924 alpha-4 code.
+     *
+     * <p>
+     * This method calls {@link #getByCode(String, boolean) getByCode}{@code (code, false)}.
+     * </p>
+     *
+     * @param code
+     *         ISO 15924 alpha-4 code. Or "Undefined" (case insensitive).
+     *
+     * @return
+     *         A {@code ScriptCode} instance, or {@code null} if not found.
+     *
+     * @since 1.13
+     */
+    public static ScriptCode getByCodeIgnoreCase(String code)
     {
         return getByCode(code, false);
     }
@@ -1098,7 +1138,8 @@ public enum ScriptCode
      * ISO 15924 alpha-4 code.
      *
      * @param code
-     *         ISO 15924 alpha-4 code.
+     *         ISO 15924 alpha-4 code. Or "Undefined" (its case sensitivity
+     *         depends on the value of {@code caseSensitive}).
      *
      * @param caseSensitive
      *         If {@code true}, the first letter of the given code should be
@@ -1113,9 +1154,19 @@ public enum ScriptCode
      */
     public static ScriptCode getByCode(String code, boolean caseSensitive)
     {
-        if (code == null || code.length() != 4)
+        if (code == null)
         {
             return null;
+        }
+
+        switch (code.length())
+        {
+            case 4:
+            case 9:
+                break;
+
+            default:
+                return null;
         }
 
         code = canonicalize(code, caseSensitive);
@@ -1140,9 +1191,15 @@ public enum ScriptCode
      *
      * @return
      *         A {@code ScriptCode} instance, or {@code null} if not found.
+     *         If 0 or a negative value is given, {@code null} is returned.
      */
     public static ScriptCode getByCode(int code)
     {
+        if (code <= 0)
+        {
+            return null;
+        }
+
         return numericMap.get(code);
     }
 

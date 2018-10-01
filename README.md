@@ -7,81 +7,41 @@ Overview
 Package to support internationalization, containing ISO 3166-1 country code enum,
 ISO 639-1 language code enum, ISO 15924 script code enum, etc.
 
-* CountryCode  : ISO 3166-1 country code.
-* LanguageCode : ISO 639-1 language code.
-* LanguageAlpha3Code : ISO 639-2 language code.
-* LocaleCode   : Available locales whose format match either 'xx' or 'xx-XX'.
-* ScriptCode   : ISO 15924 script code.
-* CurrencyCode : ISO 4217 currency code.
+| Class                | Description                                                  |
+|:---------------------|:-------------------------------------------------------------|
+| `CountryCode`        | ISO 3166-1 country code.                                     |
+| `LanguageCode`       | ISO 639-1 language code.                                     |
+| `LanguageAlpha3Code` | ISO 639-2 language code.                                     |
+| `LocaleCode`         | Available locales whose format match either 'xx' or 'xx-XX'. |
+| `ScriptCode`         | ISO 15924 script code.                                       |
+| `CurrencyCode`       | ISO 4217 currency code.                                      |
 
 
 License
 -------
 
-Apache License, Version 2.0
-
-
-Download
---------
-
-    git clone https://github.com/TakahikoKawasaki/nv-i18n.git
-
-
-Javadoc
--------
-
-[nv-i18n javadoc](http://TakahikoKawasaki.github.com/nv-i18n/)
-
-
-Example
--------
-
-```java
-    // List all the country codes.
-    for (CountryCode code : CountryCode.values())
-    {
-        System.out.format("[%s] %s\n", code, code.getName());
-    }
-
-    // List all the language codes.
-    for (LanguageCode code : LanguageCode.values())
-    {
-        System.out.format("[%s] %s\n", code, code.getName());
-    }
-
-    // List all the locale codes.
-    for (LocaleCode code : LocaleCode.values())
-    {
-        String language = code.getLanguage().getName();
-        String country  = code.getCountry() != null
-                        ? code.getCountry().getName() : null;
-
-        System.out.format("[%s] %s, %s\n", code, language, country);
-    }
-
-    // List all the script codes.
-    for (ScriptCode code : ScriptCode.values())
-    {
-        System.out.format("[%s] %03d %s\n", code, code.getNumeric(), code.getName());
-    }
-
-    // List all the currency codes.
-    for (CurrencyCode code : CurrencyCode.values())
-    {
-        System.out.format("[%s] %03d %s\n", code, code.getNumeric(), code.getName());
-    }
-```
+  Apache License, Version 2.0
 
 
 Maven
 -----
 
 ```xml
-    <dependency>
-        <groupId>com.neovisionaries</groupId>
-        <artifactId>nv-i18n</artifactId>
-        <version>1.12</version>
-    </dependency>
+<dependency>
+    <groupId>com.neovisionaries</groupId>
+    <artifactId>nv-i18n</artifactId>
+    <version>1.23</version>
+</dependency>
+```
+
+
+Gradle
+------
+
+```gradle
+dependencies {
+    compile 'com.neovisionaries:nv-i18n:1.23'
+}
 ```
 
 
@@ -89,8 +49,59 @@ OSGi
 ----
 
     Bundle-SymbolicName: com.neovisionaries.i18n
-    Export-Package: com.neovisionaries.i18n;version="1.12.0"
+    Export-Package: com.neovisionaries.i18n;version="1.23.0"
 
+
+Source Code
+-----------
+
+  <code>https://github.com/TakahikoKawasaki/nv-i18n.git</code>
+
+
+JavaDoc
+-------
+
+  <code>http://TakahikoKawasaki.github.io/nv-i18n/</code>
+
+
+Example
+-------
+
+```java
+// List all the country codes.
+for (CountryCode code : CountryCode.values())
+{
+    System.out.format("[%s] %s\n", code, code.getName());
+}
+
+// List all the language codes.
+for (LanguageCode code : LanguageCode.values())
+{
+    System.out.format("[%s] %s\n", code, code.getName());
+}
+
+// List all the locale codes.
+for (LocaleCode code : LocaleCode.values())
+{
+    String language = code.getLanguage().getName();
+    String country  = code.getCountry() != null
+                    ? code.getCountry().getName() : null;
+
+    System.out.format("[%s] %s, %s\n", code, language, country);
+}
+
+// List all the script codes.
+for (ScriptCode code : ScriptCode.values())
+{
+    System.out.format("[%s] %03d %s\n", code, code.getNumeric(), code.getName());
+}
+
+// List all the currency codes.
+for (CurrencyCode code : CurrencyCode.values())
+{
+    System.out.format("[%s] %03d %s\n", code, code.getNumeric(), code.getName());
+}
+```
 
 
 See Also
@@ -123,4 +134,4 @@ This nv-i18n supersedes https://github.com/TakahikoKawasaki/CountryCode
 Author
 ------
 
-Takahiko Kawasaki, Neo Visionaries Inc.
+Takahiko Kawasaki, [Authlete, Inc.](https://www.authlete.com/)
