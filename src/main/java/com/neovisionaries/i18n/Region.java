@@ -18,7 +18,7 @@ public interface Region
 
 	enum Type {
 		/**
-		 * A country or formal country
+		 * A country or former country
 		 */
 		COUNTRY,
 
